@@ -203,7 +203,7 @@ define("json-api-adapter",
               if (linkValue && typeof linkValue === 'object' && linkValue.href) {
                 json.links = json.links || {};
                 json.links[link] = linkValue.href;
-              } else if(typeof linkValue === 'object' && linkValue.ids) {
+              } else if (linkValue && typeof linkValue === 'object' && linkValue.ids) {
                 json[link] = linkValue.ids;
               } else {
                 json[link] = linkValue;
