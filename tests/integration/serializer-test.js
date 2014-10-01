@@ -107,10 +107,11 @@ test("superVillain.evilMinions.firstObject.superVillain should equal superVillai
     // passing
     equal(record.get('id'), sameRecord.get('id'), "ids match")
     equal(record.constructor, sameRecord.constructor, "types match")
-
-    // failing
     equal(record.toString(), sameRecord.toString(), "toString() matches");
     ok(record === sameRecord, "record object is the same object");
+
+    // failing
+    equal(env.store.typeMapFor(SuperVillain).records.length, 1, "correct number of models in typeMap");
   });
 });
 
