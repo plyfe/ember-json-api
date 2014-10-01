@@ -168,7 +168,7 @@
       /**
        * Patch the extractSingle method, since there are no singular records
        */
-      extractSingle: function(store, primaryType, payload, recordId, requestType) {
+      extractSingle: function(store, primaryType, payload, recordId, requestType, record) {
         var primaryTypeName;
         if (this.keyForAttribute) {
           primaryTypeName = this.keyForAttribute(primaryType.typeKey);
@@ -187,7 +187,7 @@
             json[key] = payload[key];
           }
         }
-        return this._super(store, primaryType, json, recordId, requestType);
+        return this._super(store, primaryType, json, recordId, requestType, record);
       },
 
       /**
@@ -220,8 +220,7 @@
           delete payload.links;
         }
         if (payload.linked) {
-          this.extractLinked(payload.linked);
-          delete payload.linked;
+          this.extractLinked(payload);
         }
         return payload;
       },
@@ -229,8 +228,8 @@
       /**
        * Extract top-level "linked" containing associated objects
        */
-      extractLinked: function(linked) {
-        var link, values, value, relation;
+      extractLinked: function(payload) {
+        var link, values, value, relation, linked = payload.linked;
         var store = get(this, 'store');
 
         for (link in linked) {
@@ -245,8 +244,16 @@
               delete value.links;
             }
           }
+
+          if (payload[link]){
+            payload[link].pushObjects(linked[link]);
+          }else{
+            payload[link] = linked[link];
+          }
+
+          delete linked[link];
         }
-        store.pushPayload(linked);
+        delete payload.linked;
       },
 
       /**
